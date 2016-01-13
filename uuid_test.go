@@ -6,9 +6,15 @@ import (
 )
 
 func TestGenerateUUID(t *testing.T) {
-	prev := GenerateUUID()
+	prev, err := GenerateUUID()
+	if err != nil {
+		t.Fatal(err)
+	}
 	for i := 0; i < 100; i++ {
-		id := GenerateUUID()
+		id, err := GenerateUUID()
+		if err != nil {
+			t.Fatal(err)
+		}
 		if prev == id {
 			t.Fatalf("Should get a new ID!")
 		}
