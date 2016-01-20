@@ -1,6 +1,8 @@
 package uuid
 
 import (
+	"crypto/rand"
+	"reflect"
 	"regexp"
 	"testing"
 )
@@ -24,5 +26,26 @@ func TestGenerateUUID(t *testing.T) {
 		if !matched || err != nil {
 			t.Fatalf("expected match %s %v %s", id, matched, err)
 		}
+	}
+}
+
+func TestParseUUID(t *testing.T) {
+	buf := make([]byte, 16)
+	if _, err := rand.Read(buf); err != nil {
+		t.Fatalf("failed to read random bytes: %v", err)
+	}
+
+	uuidStr, err := FormatUUID(buf)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	parsedStr, err := ParseUUID(uuidStr)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if !reflect.DeepEqual(parsedStr, buf) {
+		t.Fatalf("mismatched buffers")
 	}
 }
