@@ -1,6 +1,6 @@
 # uuid [![Build Status](https://travis-ci.org/hashicorp/go-uuid.svg?branch=master)](https://travis-ci.org/hashicorp/go-uuid)
 
-Generates UUID-format strings using high quality, purely random bytes.
+Generates UUID-format strings using high quality, purely random bytes. It can also parse UUID-format strings into their component bytes.
 
 Documentation
 =============
