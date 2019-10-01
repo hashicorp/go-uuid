@@ -30,7 +30,7 @@ func TestGenerateUUID(t *testing.T) {
 	}
 }
 
-func TestGenerateUUIDByReader(t *testing.T) {
+func TestGenerateUUIDWithReader(t *testing.T) {
 	var nilReader io.Reader
 	str, err := GenerateUUIDWithReader(nilReader)
 	if err == nil {
@@ -87,7 +87,7 @@ func BenchmarkGenerateUUID(b *testing.B) {
 	}
 }
 
-func BenchmarkGenerateUUIDByReader(b *testing.B) {
+func BenchmarkGenerateUUIDWithReader(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		_, _ = GenerateUUIDWithReader(rand.Reader)
 	}
