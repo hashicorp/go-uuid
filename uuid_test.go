@@ -32,7 +32,7 @@ func TestGenerateUUID(t *testing.T) {
 
 func TestGenerateUUIDByReader(t *testing.T) {
 	var nilReader io.Reader
-	str, err := GenerateUUIDByReader(nilReader)
+	str, err := GenerateUUIDWithReader(nilReader)
 	if err == nil {
 		t.Fatalf("should get an error with a nilReader")
 	}
@@ -40,12 +40,12 @@ func TestGenerateUUIDByReader(t *testing.T) {
 		t.Fatalf("should get an empty string")
 	}
 
-	prev, err := GenerateUUIDByReader(rand.Reader)
+	prev, err := GenerateUUIDWithReader(rand.Reader)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	id, err := GenerateUUIDByReader(rand.Reader)
+	id, err := GenerateUUIDWithReader(rand.Reader)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -89,6 +89,6 @@ func BenchmarkGenerateUUID(b *testing.B) {
 
 func BenchmarkGenerateUUIDByReader(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		_, _ = GenerateUUIDByReader(rand.Reader)
+		_, _ = GenerateUUIDWithReader(rand.Reader)
 	}
 }

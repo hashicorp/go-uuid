@@ -9,10 +9,14 @@ import (
 
 // GenerateRandomBytes is used to generate random bytes of given size.
 func GenerateRandomBytes(size int) ([]byte, error) {
-	return generateRandomBytesByReader(size, rand.Reader)
+	return GenerateRandomBytesWithReader(size, rand.Reader)
 }
 
-func generateRandomBytesByReader(size int, reader io.Reader) ([]byte, error) {
+// GenerateRandomBytesWithReader is used to generate random bytes of given size read from a given reader.
+func GenerateRandomBytesWithReader(size int, reader io.Reader) ([]byte, error) {
+	if reader == nil {
+		return nil, fmt.Errorf("provided reader is nil")
+	}
 	buf := make([]byte, size)
 	if _, err := io.ReadFull(reader, buf); err != nil {
 		return nil, fmt.Errorf("failed to read random bytes: %v", err)
@@ -25,15 +29,15 @@ const uuidLen = 16
 
 // GenerateUUID is used to generate a random UUID
 func GenerateUUID() (string, error) {
-	return GenerateUUIDByReader(rand.Reader)
+	return GenerateUUIDWithReader(rand.Reader)
 }
 
-// GenerateUUIDByReader is used to generate a random UUID by a given Reader
-func GenerateUUIDByReader(reader io.Reader) (string, error) {
+// GenerateUUIDWithReader is used to generate a random UUID with a given Reader
+func GenerateUUIDWithReader(reader io.Reader) (string, error) {
 	if reader == nil {
 		return "", fmt.Errorf("provided reader is nil")
 	}
-	buf, err := generateRandomBytesByReader(uuidLen, reader)
+	buf, err := GenerateRandomBytesWithReader(uuidLen, reader)
 	if err != nil {
 		return "", err
 	}
