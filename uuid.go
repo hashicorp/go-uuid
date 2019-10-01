@@ -4,6 +4,7 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"fmt"
+	"io"
 )
 
 // GenerateRandomBytes is used to generate random bytes of given size.
@@ -15,11 +16,30 @@ func GenerateRandomBytes(size int) ([]byte, error) {
 	return buf, nil
 }
 
+// GenerateRandomBytesByReader is used to generate random bytes of given size by given Reader.
+func GenerateRandomBytesByReader(size int, reader io.Reader) ([]byte, error) {
+	buf := make([]byte, size)
+	if _, err := reader.Read(buf); err != nil {
+		return nil, fmt.Errorf("failed to read random bytes: %v", err)
+	}
+	return buf, nil
+}
+
+
 const uuidLen = 16
 
 // GenerateUUID is used to generate a random UUID
 func GenerateUUID() (string, error) {
 	buf, err := GenerateRandomBytes(uuidLen)
+	if err != nil {
+		return "", err
+	}
+	return FormatUUID(buf)
+}
+
+// GenerateUUIDByReader is used to generate a random UUID by a given Reader
+func GenerateUUIDByReader(reader io.Reader) (string, error) {
+	buf, err := GenerateRandomBytesByReader(uuidLen, reader)
 	if err != nil {
 		return "", err
 	}

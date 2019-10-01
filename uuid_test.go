@@ -29,6 +29,28 @@ func TestGenerateUUID(t *testing.T) {
 	}
 }
 
+func TestGenerateUUIDByReader(t *testing.T) {
+	prev, err := GenerateUUIDByReader(rand.Reader)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for i := 0; i < 100; i++ {
+		id, err := GenerateUUIDByReader(rand.Reader)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if prev == id {
+			t.Fatalf("Should get a new ID!")
+		}
+
+		matched, err := regexp.MatchString(
+			"[\\da-f]{8}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{12}", id)
+		if !matched || err != nil {
+			t.Fatalf("expected match %s %v %s", id, matched, err)
+		}
+	}
+}
+
 func TestParseUUID(t *testing.T) {
 	buf := make([]byte, 16)
 	if _, err := rand.Read(buf); err != nil {
@@ -53,5 +75,11 @@ func TestParseUUID(t *testing.T) {
 func BenchmarkGenerateUUID(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		_, _ = GenerateUUID()
+	}
+}
+
+func BenchmarkGenerateUUIDByReader(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		_, _ = GenerateUUIDByReader(rand.Reader)
 	}
 }
