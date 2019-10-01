@@ -2,6 +2,7 @@ package uuid
 
 import (
 	"crypto/rand"
+	"io"
 	"reflect"
 	"regexp"
 	"testing"
@@ -30,24 +31,32 @@ func TestGenerateUUID(t *testing.T) {
 }
 
 func TestGenerateUUIDByReader(t *testing.T) {
+	var nilReader io.Reader
+	str, err := GenerateUUIDByReader(nilReader)
+	if err == nil {
+		t.Fatalf("should get an error with a nilReader")
+	}
+	if str != "" {
+		t.Fatalf("should get an empty string")
+	}
+
 	prev, err := GenerateUUIDByReader(rand.Reader)
 	if err != nil {
 		t.Fatal(err)
 	}
-	for i := 0; i < 100; i++ {
-		id, err := GenerateUUIDByReader(rand.Reader)
-		if err != nil {
-			t.Fatal(err)
-		}
-		if prev == id {
-			t.Fatalf("Should get a new ID!")
-		}
 
-		matched, err := regexp.MatchString(
-			"[\\da-f]{8}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{12}", id)
-		if !matched || err != nil {
-			t.Fatalf("expected match %s %v %s", id, matched, err)
-		}
+	id, err := GenerateUUIDByReader(rand.Reader)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if prev == id {
+		t.Fatalf("Should get a new ID!")
+	}
+
+	matched, err := regexp.MatchString(
+		"[\\da-f]{8}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{12}", id)
+	if !matched || err != nil {
+		t.Fatalf("expected match %s %v %s", id, matched, err)
 	}
 }
 
