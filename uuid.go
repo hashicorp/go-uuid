@@ -24,7 +24,6 @@ func GenerateRandomBytesWithReader(size int, reader io.Reader) ([]byte, error) {
 	return buf, nil
 }
 
-
 const uuidLen = 16
 
 // GenerateUUID is used to generate a random UUID
@@ -49,16 +48,23 @@ func FormatUUID(buf []byte) (string, error) {
 		return "", fmt.Errorf("wrong length byte slice (%d)", buflen)
 	}
 
-	return fmt.Sprintf("%x-%x-%x-%x-%x",
-		buf[0:4],
-		buf[4:6],
-		buf[6:8],
-		buf[8:10],
-		buf[10:16]), nil
+	s := make([]byte, 36)
+
+	hex.Encode(s[0:8], buf[0:4])
+	s[8] = '-'
+	hex.Encode(s[9:13], buf[4:6])
+	s[13] = '-'
+	hex.Encode(s[14:18], buf[6:8])
+	s[18] = '-'
+	hex.Encode(s[19:23], buf[8:10])
+	s[23] = '-'
+	hex.Encode(s[24:], buf[10:])
+
+	return string(s), nil
 }
 
 func ParseUUID(uuid string) ([]byte, error) {
-	if len(uuid) != 2 * uuidLen + 4 {
+	if len(uuid) != 2*uuidLen+4 {
 		return nil, fmt.Errorf("uuid string is wrong length")
 	}
 
