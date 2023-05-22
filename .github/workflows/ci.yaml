@@ -1,0 +1,52 @@
+name: Run CI Tests
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - README.md
+      - .gitignore
+  pull_request:
+    paths-ignore:
+      - README.md
+      - .gitignore
+jobs:
+  run-lint:
+    timeout-minutes: 10
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
+      - uses: hashicorp/setup-golang@v1
+        with:
+          version-file: go.mod
+      - uses: golangci/golangci-lint-action@v3
+        with:
+          version: v1.52.2
+          skip-cache: true
+  run-tests:
+    timeout-minutes: 10
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
+      - uses: hashicorp/setup-golang@v1
+        with:
+          version-file: go.mod
+      - name: Run Go Vet
+        run: |
+          go vet ./...
+      - name: Run Go Fmt
+        run: |
+          files=$(go fmt ./...)
+          if [ -n "$files" ]; then
+            echo "Please run gofmt on these files ..."
+            echo "$files"
+            exit 1
+          fi
+      - name: Run Go Test
+        run: |
+          go test -race -v ./...
+      - name: Run Go Bench
+        run: |
+          go test -bench . -benchmem -v ./...
+
+
