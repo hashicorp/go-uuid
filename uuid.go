@@ -22,7 +22,7 @@ func GenerateRandomBytesWithReader(size int, reader io.Reader) ([]byte, error) {
 	}
 	buf := make([]byte, size)
 	if _, err := io.ReadFull(reader, buf); err != nil {
-		return nil, fmt.Errorf("failed to read random bytes: %v", err)
+		return nil, fmt.Errorf("failed to read random bytes: %w", err)
 	}
 	return buf, nil
 }
