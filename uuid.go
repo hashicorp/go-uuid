@@ -34,6 +34,35 @@ func GenerateUUID() (string, error) {
 	return GenerateUUIDWithReader(rand.Reader)
 }
 
+// GenerateSecureUUID panics in the event reading from the secure crypto/rand
+// reader fails. This is because entropy errors usually aren't userspace
+// recoverable; we can potentially wait before re-reading from /dev/urandom, but
+// once initialized, it should not cause an error.
+//
+// See: https://github.com/golang/go/blob/master/src/crypto/rand/rand_unix.go#L46-L47
+//
+// Most call sites of GenerateUUID in Vault do one of two things:
+//
+//  1. Bubble the error up to their parent to handle.
+//  2. Ignore the error and hard-code a resulting UUID.
+//
+// In both cases, rather than making the caller think about how to handle
+// entropy request errors (the only possible case as crypto/rand.Reader
+// should never be nil), panic()'ing is a cleaner and safer approach as
+// the entropy source is safer and most callers should not continue to
+// operate until this has been addressed.
+//
+// It also has the side-effect of returning only the requested information,
+// simplifying the call signature.
+func GenerateSecureUUID() string {
+	ret, err := GenerateUUID()
+	if err != nil {
+		panic("crypto/rand returned fatal error: " + err.Error())
+	}
+
+	return ret
+}
+
 // GenerateUUIDWithReader is used to generate a random UUID with a given Reader
 func GenerateUUIDWithReader(reader io.Reader) (string, error) {
 	if reader == nil {
