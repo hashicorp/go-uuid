@@ -15,11 +15,14 @@ jobs:
     timeout-minutes: 10
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
-      - uses: hashicorp/setup-golang@v1
+      - name: Checkout Go
+        uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
+      - name: Setup Go
+        uses: hashicorp/setup-golang@v1
         with:
           version-file: go.mod
-      - uses: golangci/golangci-lint-action@3a919529898de77ec3da873e3063ca4b10e7f5cc # v3.7.0
+      - name: Run golangci-lint 
+        uses: golangci/golangci-lint-action@3a919529898de77ec3da873e3063ca4b10e7f5cc # v3.7.0
         with:
           version: v1.52.2
           skip-cache: true
@@ -27,8 +30,10 @@ jobs:
     timeout-minutes: 10
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
-      - uses: hashicorp/setup-golang@v1
+      - name: Checkout Code
+        uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
+      - name: Setup Go
+        uses: hashicorp/setup-golang@v1
         with:
           version-file: go.mod
       - name: Run Go Vet
@@ -44,9 +49,17 @@ jobs:
           fi
       - name: Run Go Test
         run: |
-          go test -race -v ./...
+          go test -race -v ./... -coverprofile=coverage.out
       - name: Run Go Bench
         run: |
           go test -bench . -benchmem -v ./...
-
-
+      - name: Upload Coverage report
+        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808
+        with:
+         path: coverage.out
+         name: Coverage-report
+      - name: Display coverage report
+        run: go tool cover -func=coverage.out
+      - name: Build Go
+        run: go build ./...
+        
