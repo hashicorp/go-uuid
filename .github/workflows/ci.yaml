@@ -16,13 +16,13 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout Go
-        uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
+        uses: actions/checkout@900f2210b1d28bbbd0bd22d17926b9e224e8f231 # v4.0.0
       - name: Setup Go
-        uses: hashicorp/setup-golang@v1
+        uses: hashicorp/setup-golang@v3
         with:
           version-file: go.mod
       - name: Run golangci-lint 
-        uses: golangci/golangci-lint-action@3a919529898de77ec3da873e3063ca4b10e7f5cc # v3.7.0
+        uses: golangci/golangci-lint-action@82606bf257cbaff209d206a39f5134f0cfbfd2ee # v9.2.1
         with:
           version: v1.52.2
           skip-cache: true
@@ -31,9 +31,9 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout Code
-        uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
+        uses: actions/checkout@900f2210b1d28bbbd0bd22d17926b9e224e8f231 # v4.0.0
       - name: Setup Go
-        uses: hashicorp/setup-golang@v1
+        uses: hashicorp/setup-golang@v3
         with:
           version-file: go.mod
       - name: Run Go Vet
@@ -54,7 +54,7 @@ jobs:
         run: |
           go test -bench . -benchmem -v ./...
       - name: Upload Coverage report
-        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
          path: coverage.out
          name: Coverage-report
