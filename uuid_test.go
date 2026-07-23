@@ -98,3 +98,21 @@ func BenchmarkGenerateUUIDWithReader(b *testing.B) {
 		_, _ = GenerateUUIDWithReader(rand.Reader)
 	}
 }
+
+func TestParseUUIDTrimSpace(t *testing.T) {
+	id, err := GenerateUUID()
+	if err != nil {
+		t.Fatal(err)
+	}
+	b, err := ParseUUID("  " + id + "\n")
+	if err != nil {
+		t.Fatal(err)
+	}
+	formatted, err := FormatUUID(b)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if formatted != id {
+		t.Fatalf("got %s want %s", formatted, id)
+	}
+}

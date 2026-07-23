@@ -8,6 +8,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"io"
+	"strings"
 )
 
 // GenerateRandomBytes is used to generate random bytes of given size.
@@ -60,6 +61,7 @@ func FormatUUID(buf []byte) (string, error) {
 }
 
 func ParseUUID(uuid string) ([]byte, error) {
+	uuid = strings.TrimSpace(uuid)
 	if len(uuid) != 2*uuidLen+4 {
 		return nil, fmt.Errorf("uuid string is wrong length")
 	}
