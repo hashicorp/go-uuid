@@ -8,7 +8,6 @@ run:
 
 linters:
  enable:
-  - gofmt
   - errcheck
   - errname
   - errorlint
@@ -17,3 +16,7 @@ linters:
   - exhaustive
   - goconst
   - whitespace
+
+ formatters:
+  enable:
+   - gofmt
