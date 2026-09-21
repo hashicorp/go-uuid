@@ -1,16 +1,19 @@
 # Copyright IBM Corp. 2015, 2025
 # SPDX-License-Identifier: MPL-2.0
 
+version: "2"
+
 run:
-  timeout: 5m
+ timeout: 5m
+
 linters:
-  enable:
-   - gofmt
-   - errcheck
-   - errname
-   - errorlint
-   - bodyclose
-   - durationcheck
-   - exhaustive
-   - goconst
-   - whitespace
+ enable:
+  - gofmt
+  - errcheck
+  - errname
+  - errorlint
+  - bodyclose
+  - durationcheck
+  - exhaustive
+  - goconst
+  - whitespace
