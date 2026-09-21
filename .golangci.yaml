@@ -17,6 +17,6 @@ linters:
   - goconst
   - whitespace
 
- formatters:
-  enable:
-   - gofmt
+formatters:
+ enable:
+  - gofmt
