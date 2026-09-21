@@ -22,7 +22,7 @@ jobs:
         with:
           version-file: go.mod
       - name: Run golangci-lint 
-        uses: golangci/golangci-lint-action@v6
+        uses: golangci/golangci-lint-action@v7
         with:
           version: v2.1.6
           skip-cache: true
