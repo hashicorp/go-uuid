@@ -20,6 +20,9 @@ func GenerateRandomBytesWithReader(size int, reader io.Reader) ([]byte, error) {
 	if reader == nil {
 		return nil, fmt.Errorf("provided reader is nil")
 	}
+	if size < 0 {
+		return nil, fmt.Errorf("size must be non-negative")
+	}
 	buf := make([]byte, size)
 	if _, err := io.ReadFull(reader, buf); err != nil {
 		return nil, fmt.Errorf("failed to read random bytes: %w", err)
